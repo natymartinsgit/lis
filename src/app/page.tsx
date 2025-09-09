@@ -1,103 +1,286 @@
-import Image from "next/image";
+'use client';
+import { useState } from 'react';
+import StyleAssistant from '@/components/StyleAssistant';
+import Lookbook from '@/components/Lookbook';
+import FeedbackSystem from '@/components/FeedbackSystem';
+import AlternativesViewer from '@/components/AlternativesViewer';
+import InstagramLookCard from '@/components/InstagramLookCard';
+import { UserProfile, StyleRecommendation } from '@/types';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [showAssistant, setShowAssistant] = useState(true);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [recommendation, setRecommendation] = useState<StyleRecommendation | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [showLookbook, setShowLookbook] = useState(false);
+  const [savingLook, setSavingLook] = useState(false);
+  const [showAlternatives, setShowAlternatives] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handleAssistantComplete = async (profile: UserProfile) => {
+    setUserProfile(profile);
+    setShowAssistant(false);
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/styleAssistant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ profile }),
+      });
+
+      const data = await res.json();
+      setRecommendation(data);
+    } catch (error) {
+      console.error('Erro ao obter recomendação:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSaveToLookbook = async () => {
+    if (!recommendation || !userProfile) return;
+    
+    setSavingLook(true);
+    try {
+      const response = await fetch('/api/lookbook', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          look: recommendation,
+          profile: userProfile
+        })
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        alert('💖 Look salvo no seu lookbook com sucesso!');
+      } else {
+        alert('Erro ao salvar look: ' + result.error);
+      }
+    } catch (error) {
+      console.error('Erro ao salvar look:', error);
+      alert('Erro ao salvar look');
+    } finally {
+      setSavingLook(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 animate-gradient">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-md shadow-soft border-b border-purple-100 sticky top-0 z-50 animate-fade-in">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent animate-pulse">
+                Lookia
+              </h1>
+              <span className="text-sm text-gray-500 animate-slide-in">Sua IA Estilista Pessoal</span>
+            </div>
+            <nav className="flex space-x-4 animate-slide-in">
+              <button
+                onClick={() => setShowLookbook(true)}
+                className="px-4 py-2 text-purple-600 hover:text-purple-800 font-medium transition-all duration-300 hover:scale-105 hover-glow"
+              >
+                📚 Meu Lookbook
+              </button>
+              <button
+                onClick={() => {
+                  setShowAssistant(true);
+                  setRecommendation(null);
+                  setUserProfile(null);
+                  setShowAlternatives(false);
+                }}
+                className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 hover-glow"
+              >
+                ✨ Novo Look
+              </button>
+            </nav>
+          </div>
         </div>
+      </header>
+
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {showAssistant && (
+          <div className="animate-fade-in">
+            <StyleAssistant onComplete={handleAssistantComplete} />
+          </div>
+        )}
+
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-20 animate-fade-in">
+            <div className="relative">
+              <div className="w-16 h-16 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+              <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-r-pink-600 rounded-full animate-spin-reverse"></div>
+            </div>
+            <p className="mt-6 text-lg text-gray-600 animate-pulse">✨ Criando seu look perfeito...</p>
+            <p className="mt-2 text-sm text-gray-500 animate-bounce">Analisando seu perfil e preferências</p>
+          </div>
+        )}
+
+        {recommendation && !showAssistant && !loading && (
+          <div className="space-y-8 animate-fade-in">
+            {/* Descrição do Look */}
+            <div className="bg-white rounded-2xl shadow-soft hover-lift p-6 md:p-8 glass border border-purple-100">
+              <div className="flex justify-between items-start mb-6">
+                <h2 className="text-2xl font-bold text-gray-800 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                  💫 Seu Look Personalizado
+                </h2>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => setShowAlternatives(true)}
+                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 text-sm font-medium"
+                  >
+                    🔄 Ver Alternativas
+                  </button>
+                  <button
+                    onClick={handleSaveToLookbook}
+                    disabled={savingLook}
+                    className="px-4 py-2 bg-gradient-to-r from-pink-500 to-red-500 text-white rounded-lg hover:from-pink-600 hover:to-red-600 transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                  >
+                    {savingLook ? '💾 Salvando...' : '💖 Salvar Look'}
+                  </button>
+                </div>
+              </div>
+              <div className="prose max-w-none">
+                <p className="text-gray-700 leading-relaxed text-lg animate-slide-in">{recommendation.descricao}</p>
+              </div>
+            </div>
+
+            {/* Inspiração de Look estilo Instagram */}
+            {recommendation && (
+              <div className="animate-slide-in">
+                <h3 className="text-2xl font-semibold mb-6 text-gray-800 text-center flex items-center justify-center gap-2">
+                  📸 Inspiração de Look
+                </h3>
+                <div className="flex justify-center">
+                  <InstagramLookCard
+                    look={{
+                      descricao: recommendation.descricao,
+                      imagens: recommendation.imagens || [],
+                      dicas: recommendation.dicas || [],
+                      acessorios: recommendation.acessorios || []
+                    }}
+                    onSave={handleSaveToLookbook}
+                    showSaveButton={true}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Sistema de Feedback */}
+            <div className="animate-slide-in">
+              <div className="bg-white rounded-2xl shadow-soft hover-lift p-6 md:p-8 glass border border-purple-100">
+                <FeedbackSystem
+                  userProfile={{
+                    clima: userProfile?.clima || '',
+                    ocasiao: userProfile?.ocasiao || '',
+                    cores: Array.isArray(userProfile?.cores) ? userProfile.cores.join(', ') : userProfile?.cores || '',
+                    estilo: userProfile?.estilo || '',
+                    conforto: userProfile?.confortoOusadia || '',
+                    personalidade: userProfile?.personalidade || ''
+                  }}
+                  recommendation={recommendation}
+                  onFeedbackSubmitted={(feedback) => {
+                    console.log('Feedback recebido:', feedback);
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Alternativas de Looks */}
+            {showAlternatives && userProfile && (
+              <div className="animate-fade-in">
+                <div className="bg-white rounded-2xl shadow-soft hover-lift p-6 md:p-8 glass border border-purple-100">
+                  <AlternativesViewer
+                    userProfile={userProfile}
+                    onSelectAlternative={(alternative) => {
+                      setRecommendation({
+                        descricao: alternative.descricao,
+                        imagens: alternative.imagens,
+                        dicas: alternative.dicas,
+                        acessorios: alternative.acessorios
+                      });
+                      setShowAlternatives(false);
+                    }}
+                    onSaveToLookbook={async (alternative) => {
+                      try {
+                        const response = await fetch('/api/lookbook', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            look: {
+                              descricao: alternative.descricao,
+                              imagens: alternative.imagens,
+                              dicas: alternative.dicas,
+                              acessorios: alternative.acessorios
+                            },
+                            profile: userProfile
+                          })
+                        });
+                        
+                        const result = await response.json();
+                        if (result.success) {
+                          alert('💖 Alternativa salva no seu lookbook com sucesso!');
+                        } else {
+                          alert('Erro ao salvar alternativa: ' + result.error);
+                        }
+                      } catch (error) {
+                        console.error('Erro ao salvar alternativa:', error);
+                        alert('Erro ao salvar alternativa');
+                      }
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Seção de dicas e acessórios */}
+            {recommendation && (
+              <div className="grid md:grid-cols-2 gap-6 animate-slide-in">
+                {recommendation.dicas && recommendation.dicas.length > 0 && (
+                  <div className="bg-white rounded-2xl shadow-soft hover-lift p-6 glass border border-purple-100">
+                    <h3 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                      💡 Dicas de Estilo
+                    </h3>
+                    <ul className="space-y-3">
+                      {recommendation.dicas.map((dica, index) => (
+                        <li key={index} className="flex items-start gap-2 text-gray-600">
+                          <span className="text-purple-500 mt-1">•</span>
+                          <span>{dica}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {recommendation.acessorios && recommendation.acessorios.length > 0 && (
+                  <div className="bg-white rounded-2xl shadow-soft hover-lift p-6 glass border border-purple-100">
+                    <h3 className="text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                      ✨ Acessórios Sugeridos
+                    </h3>
+                    <ul className="space-y-3">
+                      {recommendation.acessorios.map((acessorio, index) => (
+                        <li key={index} className="flex items-start gap-2 text-gray-600">
+                          <span className="text-purple-500 mt-1">•</span>
+                          <span>{acessorio}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      
+      {showLookbook && (
+        <Lookbook onClose={() => setShowLookbook(false)} />
+      )}
     </div>
   );
 }

@@ -1,0 +1,205 @@
+{
+  "looks": {
+    "elegante": {
+      "casamento": {
+        "images": [
+          "/api/proxy-image/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1566479179817-c0b5b4b8b1cc?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["vestido longo", "salto alto", "clutch", "joias delicadas", "tecidos nobres", "cores neutras"]
+      },
+      "trabalho": {
+        "images": [
+          "/api/proxy-image/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1560472354-b33ff0c44a43?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["blazer", "calça social", "camisa", "sapato fechado", "bolsa estruturada", "cores sóbrias"]
+      },
+      "festa": {
+        "images": [
+          "/api/proxy-image/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1566479179817-c0b5b4b8b1cc?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["vestido cocktail", "salto", "acessórios statement", "maquiagem marcante", "brilho", "cores vibrantes"]
+      }
+    },
+    "casual": {
+      "passeio": {
+        "images": [
+          "/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1445205170230-053b83016050?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["jeans", "t-shirt", "tênis", "jaqueta", "bolsa casual", "conforto"]
+      },
+      "shopping": {
+        "images": [
+          "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1445205170230-053b83016050?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["calça confortável", "blusa básica", "sapato confortável", "bolsa grande", "camadas"]
+      },
+      "encontro": {
+        "images": [
+          "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1445205170230-053b83016050?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["vestido midi", "sandália", "acessórios delicados", "maquiagem natural", "cores suaves"]
+      }
+    },
+    "minimalista": {
+      "trabalho": {
+        "images": [
+          "/api/proxy-image/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1560472354-b33ff0c44a43?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["linhas limpas", "cores neutras", "peças básicas", "qualidade", "simplicidade"]
+      },
+      "casual": {
+        "images": [
+          "/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["branco", "preto", "cinza", "cortes retos", "menos é mais"]
+      }
+    },
+    "streetwear": {
+      "casual": {
+        "images": [
+          "/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["oversized", "sneakers", "boné", "moletom", "jeans rasgado", "urbano"]
+      },
+      "festa": {
+        "images": [
+          "/api/proxy-image/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1566479179817-c0b5b4b8b1cc?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["crop top", "calça cargo", "tênis chunky", "acessórios chamativos", "mix de texturas"]
+      }
+    },
+    "praia": {
+      "dia": {
+        "images": [
+          "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1445205170230-053b83016050?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["biquíni", "saída de praia", "chinelo", "chapéu", "óculos de sol", "protetor solar"]
+      },
+      "noite": {
+        "images": [
+          "/api/proxy-image/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1566479179817-c0b5b4b8b1cc?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["vestido leve", "sandália rasteira", "acessórios naturais", "maquiagem à prova d'água"]
+      }
+    },
+    "esporte": {
+      "academia": {
+        "images": [
+          "/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["legging", "top esportivo", "tênis de corrida", "garrafa d'água", "toalha"]
+      },
+      "corrida": {
+        "images": [
+          "/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["shorts", "camiseta dry-fit", "tênis de corrida", "relógio esportivo", "fone bluetooth"]
+      }
+    },
+    "viagem": {
+      "aviao": {
+        "images": [
+          "/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["roupa confortável", "camadas", "sapato fácil de tirar", "meia de compressão"]
+      },
+      "turismo": {
+        "images": [
+          "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1445205170230-053b83016050?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["sapato confortável", "mochila", "roupas versáteis", "proteção solar"]
+      }
+    },
+    "casa": {
+      "conforto": {
+        "images": [
+          "/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["pijama", "roupão", "chinelo", "moletom", "calça de moletom", "conforto máximo"]
+      },
+      "home_office": {
+        "images": [
+          "/api/proxy-image/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=center",
+          "/api/proxy-image/photo-1560472354-b33ff0c44a43?w=400&h=600&fit=crop&crop=center"
+        ],
+        "tags": ["blusa social", "calça confortável", "sapato baixo", "look meio formal meio casual"]
+      }
+    }
+  },
+  "pieces": {
+    "vestido": {
+      "preto": ["/api/proxy-image/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center"],
+      "branco": ["/api/proxy-image/photo-1566479179817-c0b5b4b8b1cc?w=400&h=600&fit=crop&crop=center"],
+      "midi": ["/api/proxy-image/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&crop=center"],
+      "longo": ["/api/proxy-image/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center"],
+      "minimalista": ["/api/proxy-image/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=center"]
+    },
+    "blazer": {
+      "estruturado": ["/api/proxy-image/photo-1560472354-b33ff0c44a43?w=400&h=600&fit=crop&crop=center"],
+      "oversized": ["/api/proxy-image/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&crop=center"]
+    },
+    "jeans": {
+      "skinny": ["/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center"],
+      "mom": ["/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center"],
+      "wide_leg": ["/api/proxy-image/photo-1445205170230-053b83016050?w=400&h=600&fit=crop&crop=center"]
+    },
+    "sandalia": {
+      "nude": ["/api/proxy-image/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center"],
+      "preta": ["/api/proxy-image/photo-1566479179817-c0b5b4b8b1cc?w=400&h=600&fit=crop&crop=center"],
+      "rasteira": ["/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center"]
+    },
+    "bolsa": {
+      "estruturada": ["/api/proxy-image/photo-1560472354-b33ff0c44a43?w=400&h=600&fit=crop&crop=center"],
+      "casual": ["/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center"],
+      "clutch": ["/api/proxy-image/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center"]
+    }
+  },
+  "colors": {
+    "preto": ["/api/proxy-image/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center"],
+    "branco": ["/api/proxy-image/photo-1566479179817-c0b5b4b8b1cc?w=400&h=600&fit=crop&crop=center"],
+    "nude": ["/api/proxy-image/photo-1594633312681-425c7b97ccd1?w=400&h=600&fit=crop&crop=center"],
+    "azul": ["/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center"],
+    "vermelho": ["/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center"]
+  },
+  "styles": {
+    "minimalista": [
+      "/api/proxy-image/photo-1507003211169-0a1dd7228f2d?w=400&h=600&fit=crop&crop=center",
+      "/api/proxy-image/photo-1560472354-b33ff0c44a43?w=400&h=600&fit=crop&crop=center"
+    ],
+    "elegante": [
+      "/api/proxy-image/photo-1515372039744-b8f02a3ae446?w=400&h=600&fit=crop&crop=center",
+      "/api/proxy-image/photo-1566479179817-c0b5b4b8b1cc?w=400&h=600&fit=crop&crop=center"
+    ],
+    "casual": [
+      "/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center",
+      "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center"
+    ],
+    "streetwear": [
+      "/api/proxy-image/photo-1441986300917-64674bd600d8?w=400&h=600&fit=crop&crop=center",
+      "/api/proxy-image/photo-1469334031218-e382a71b716b?w=400&h=600&fit=crop&crop=center"
+    ]
+  }
+}
