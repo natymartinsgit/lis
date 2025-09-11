@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import imagesData from '@/data/images.json';
+
 
 interface LookInspirationViewerProps {
   lookDescription: string;
@@ -82,64 +82,59 @@ export default function LookInspirationViewer({ lookDescription, userProfile }: 
     return [...new Set(keywords)]; // Remove duplicatas
   };
 
-  // Sistema de busca de imagens
-  const findRelatedImages = (keywords: string[]): string[] => {
-    const database = imagesData as ImagesDatabase;
-    const foundImages: string[] = [];
-    const maxImages = 8; // Limite de imagens para não sobrecarregar
 
-    // Buscar por combinação estilo + ocasião
-    keywords.forEach(style => {
-      keywords.forEach(occasion => {
-        if (database.looks[style] && database.looks[style][occasion]) {
-          foundImages.push(...database.looks[style][occasion].images);
-        }
+  // Busca imagens do Pinterest via API interna
+  const fetchPinterestImages = async (keywords: string[]): Promise<string[]> => {
+    const query = keywords.join(' ');
+    try {
+      const res = await fetch('/api/pinterest', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
       });
-    });
-
-    // Buscar por peças específicas
-    keywords.forEach(keyword => {
-      Object.keys(database.pieces).forEach(piece => {
-        if (keyword.includes(piece) || piece.includes(keyword)) {
-          Object.values(database.pieces[piece]).forEach(images => {
-            foundImages.push(...images);
-          });
-        }
-      });
-    });
-
-    // Buscar por cores
-    keywords.forEach(keyword => {
-      if (database.colors[keyword]) {
-        foundImages.push(...database.colors[keyword]);
+      const data = await res.json();
+      // O retorno esperado é { results: [...] }
+      interface PinterestResultItem {
+        images?: {
+          original?: {
+            url?: string;
+          };
+        };
+        media?: {
+          images?: {
+            original?: {
+              url?: string;
+            };
+          };
+        };
+        link?: string;
       }
-    });
-
-    // Buscar por estilos
-    keywords.forEach(keyword => {
-      if (database.styles[keyword]) {
-        foundImages.push(...database.styles[keyword]);
+      if (Array.isArray(data.results)) {
+        // Tenta extrair as URLs das imagens (ajuste conforme o formato retornado pela API)
+        return data.results
+          .map((item: PinterestResultItem) => item.images?.original?.url || item.media?.images?.original?.url || item.link || '')
+          .filter(Boolean)
+          .slice(0, 8);
       }
-    });
-
-    // Remover duplicatas e limitar quantidade
-    const uniqueImages = [...new Set(foundImages)];
-    return uniqueImages.slice(0, maxImages);
+      return [];
+    } catch (e) {
+      return [];
+    }
   };
 
   useEffect(() => {
     if (lookDescription) {
       setLoading(true);
-      
+
       // Extrair palavras-chave
       const keywords = extractKeywords(lookDescription);
       setExtractedKeywords(keywords);
-      
-      // Buscar imagens relacionadas
-      const images = findRelatedImages(keywords);
-      setInspirationImages(images);
-      
-      setLoading(false);
+
+      // Buscar imagens do Pinterest
+      fetchPinterestImages(keywords).then((images) => {
+        setInspirationImages(images);
+        setLoading(false);
+      });
     }
   }, [lookDescription, userProfile]);
 
