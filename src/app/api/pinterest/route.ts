@@ -4,9 +4,13 @@ const PINTEREST_API_URL = 'https://api.pinterest.com/v5/search/pins';
 
 export async function POST(req: NextRequest) {
   try {
+
     const { query, filters } = await req.json();
     const accessToken = process.env.PINTEREST_ACCESS_TOKEN;
+    console.log('Pinterest Token:', accessToken ? 'OK' : 'NÃO ENCONTRADO');
+    console.log('Query recebida:', query);
     if (!accessToken) {
+      console.error('Pinterest access token não configurado!');
       return NextResponse.json({ error: 'Pinterest access token not configured.' }, { status: 500 });
     }
 
@@ -22,7 +26,10 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const response = await fetch(`${PINTEREST_API_URL}?${searchParams.toString()}`, {
+
+    const url = `${PINTEREST_API_URL}?${searchParams.toString()}`;
+    console.log('URL chamada:', url);
+    const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
@@ -31,10 +38,12 @@ export async function POST(req: NextRequest) {
 
     if (!response.ok) {
       const error = await response.json();
+      console.error('Erro da API Pinterest:', error);
       return NextResponse.json({ error }, { status: response.status });
     }
 
     const data = await response.json();
+    console.log('Resposta da API Pinterest:', JSON.stringify(data).slice(0, 500));
     // Retorna os dados em JSON para integração
     return NextResponse.json({ results: data.items || [] });
   } catch (error) {

@@ -1,24 +1,19 @@
-'use client';
 import { useState, useEffect, useRef } from 'react';
 import LocationDetector from './LocationDetector';
 import { Message, UserProfile } from '@/types';
 
-// Arquivo removido. Toda a lógica da assistente agora está em LisAssistant.tsx.
-interface StyleAssistantProps {
+interface LisAssistantProps {
   onComplete: (profile: UserProfile) => void;
 }
 
-export default function StyleAssistant({ onComplete }: StyleAssistantProps) {
+export default function LisAssistant({ onComplete }: LisAssistantProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile>({});
   const [isTyping, setIsTyping] = useState(false);
-
   const [showLocationDetector, setShowLocationDetector] = useState(true);
   const [inputValue, setInputValue] = useState('');
   const [waitingForInput, setWaitingForInput] = useState(false);
   const messageIdRef = useRef(0);
-
-
 
   const addMessage = (text: string, isUser: boolean) => {
     messageIdRef.current += 1;
@@ -62,12 +57,12 @@ export default function StyleAssistant({ onComplete }: StyleAssistantProps) {
     // Mensagem inicial personalizada com clima
     if (location.weatherData && typeof location.weatherData.temperature === 'number' && location.weatherData.conditions) {
       addMessage(
-        `Olá! Sou sua assistente de moda pessoal! 👗✨\nAqui está a previsão de hoje na sua região: 🌡️ ${location.weatherData.temperature}°C, ${location.weatherData.conditions} \nMe conte: para onde você vai hoje?`,
+        `Olá! Eu sou a Lis, sua assistente de moda pessoal! 👗✨\nAqui está a previsão de hoje na sua região: 🌡️ ${location.weatherData.temperature}°C, ${location.weatherData.conditions} \nMe conte: para onde você vai hoje?`,
         false
       );
     } else {
       addMessage(
-        `Olá! Sou sua assistente de moda pessoal! 👗✨\nNão consegui confirmar o clima agora, mas sem problemas!\nPara onde você vai hoje?`,
+        `Olá! Eu sou a Lis, sua assistente de moda pessoal! 👗✨\nNão consegui confirmar o clima agora, mas sem problemas!\nPara onde você vai hoje?`,
         false
       );
     }
@@ -102,7 +97,7 @@ export default function StyleAssistant({ onComplete }: StyleAssistantProps) {
       }
     } catch (error) {
       console.error('Erro ao gerar mensagem inicial:', error);
-      addMessage('Olá! 👋 Sou sua assistente de moda pessoal! Vamos começar! Me conta sobre a ocasião de hoje?', false);
+      addMessage('Olá! 👋 Eu sou a Lis, sua assistente de moda pessoal! Vamos começar! Me conta sobre a ocasião de hoje?', false);
     }
   };
 
@@ -114,8 +109,6 @@ export default function StyleAssistant({ onComplete }: StyleAssistantProps) {
     const userInput = inputValue;
     setInputValue('');
     setWaitingForInput(false);
-
-
 
     // Processar resposta da IA
     setIsTyping(true);
@@ -186,7 +179,7 @@ export default function StyleAssistant({ onComplete }: StyleAssistantProps) {
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-6 text-white">
         <h2 className="text-2xl font-bold flex items-center gap-2">
-          👗 Assistente de Estilo
+          👗 Assistente Lis
         </h2>
         <p className="text-purple-100 mt-1">Vamos descobrir seu look perfeito!</p>
       </div>
@@ -220,37 +213,6 @@ export default function StyleAssistant({ onComplete }: StyleAssistantProps) {
       {/* Chat Messages */}
       <div className={`${showLocationDetector ? 'h-64' : 'h-96'} overflow-y-auto p-8 space-y-6 bg-gradient-to-b from-gray-50 to-white`}>
         {messages.map((message, index) => {
-          // Detectar se a mensagem contém uma sugestão de look completo
-          const isCompleteLook = !message.isUser && (
-            message.text.toLowerCase().includes('look principal') ||
-            message.text.toLowerCase().includes('sugestão de look') ||
-            message.text.toLowerCase().includes('look completo') ||
-            message.text.toLowerCase().includes('recomendo') ||
-            message.text.toLowerCase().includes('sugiro') ||
-            message.text.toLowerCase().includes('perfeito para') ||
-            // Detectar combinações de peças + calçados
-            ((message.text.toLowerCase().includes('vestido') || 
-              message.text.toLowerCase().includes('blusa') || 
-              message.text.toLowerCase().includes('camisa') ||
-              message.text.toLowerCase().includes('camiseta') ||
-              message.text.toLowerCase().includes('top') ||
-              message.text.toLowerCase().includes('blazer') ||
-              message.text.toLowerCase().includes('jaqueta') ||
-              message.text.toLowerCase().includes('calça') ||
-              message.text.toLowerCase().includes('saia') ||
-              message.text.toLowerCase().includes('shorts')) &&
-             (message.text.toLowerCase().includes('sapato') || 
-              message.text.toLowerCase().includes('sandália') || 
-              message.text.toLowerCase().includes('tênis') ||
-              message.text.toLowerCase().includes('salto') ||
-              message.text.toLowerCase().includes('rasteira') ||
-              message.text.toLowerCase().includes('bota'))) ||
-            // Detectar descrições de looks com múltiplas peças
-            (message.text.split(' ').length > 15 && 
-             (message.text.toLowerCase().includes('com') || message.text.toLowerCase().includes('e ')) &&
-             (message.text.toLowerCase().includes('cor') || message.text.toLowerCase().includes('estilo') || message.text.toLowerCase().includes('tecido')))
-          );
-
           return (
             <div key={message.id} className="animate-slide-in" style={{ animationDelay: `${index * 0.1}s` }}>
               <div
@@ -266,9 +228,6 @@ export default function StyleAssistant({ onComplete }: StyleAssistantProps) {
                   <p className="whitespace-pre-line leading-relaxed">{message.text}</p>
                 </div>
               </div>
-              
-              {/* Exibir inspirações visuais para looks completos */}
-              {/* Inspirações visuais removidas temporariamente */}
             </div>
           );
         })}
@@ -318,4 +277,5 @@ export default function StyleAssistant({ onComplete }: StyleAssistantProps) {
       )}
     </div>
   );
+}
 }

@@ -160,20 +160,27 @@ ${historyContext}
 - Vá direto ao ponto sem cumprimentos repetitivos`;
 
     const result = await model.generateContent(prompt);
-    return (await result.response).text();
+    const fullText = (await result.response).text();
+    // Divide a resposta em bolhas curtas (máximo 2 quebras de linha por bolha)
+    const bubbles = fullText
+      .split(/\n{2,}/)
+      .map(msg => msg.trim())
+      .filter(Boolean)
+      .map(msg => (msg.length > 180 ? msg.slice(0, 180) + '...' : msg));
+    return bubbles;
     
   } catch (error: Error | unknown) {
     console.error('Erro na IA:', error);
     
-    // Fallback quando API do Gemini falha (limite de quota)
-    if ((error as { status?: number })?.status === 429) {
+    // Fallback quando API do Gemini falha (limite de quota ou indisponibilidade)
+    const status = (error as { status?: number })?.status;
+    if (status === 429 || status === 503) {
       return generateFallbackResponse(message, {
         occasion: profile.ocasiao,
         weather: profile.weatherData?.condition,
         style: profile.estiloDesejado
       }, conversationHistory);
     }
-    
     return "Desculpe, tive um problema técnico. Pode repetir sua mensagem?";
   }
 }
@@ -196,7 +203,7 @@ export async function POST(request: NextRequest) {
     const aiResponse = await callGeminiForChat(message, updatedProfile, conversationHistory);
     
     return NextResponse.json({
-      message: aiResponse,
+      messages: Array.isArray(aiResponse) ? aiResponse : [aiResponse],
       userProfile: updatedProfile
     });
     
