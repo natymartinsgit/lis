@@ -14,6 +14,8 @@ export default function LisAssistant({ onComplete }: LisAssistantProps) {
   const [inputValue, setInputValue] = useState('');
   const [waitingForInput, setWaitingForInput] = useState(false);
   const messageIdRef = useRef(0);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const addMessage = (text: string, isUser: boolean) => {
     messageIdRef.current += 1;
@@ -24,6 +26,42 @@ export default function LisAssistant({ onComplete }: LisAssistantProps) {
       timestamp: new Date()
     };
     setMessages(prev => [...prev, newMessage]);
+    
+    // Scroll automático para a última mensagem
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'end'
+      });
+    }, 100);
+  };
+
+  // Scroll automático para novas mensagens
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'end'
+        });
+      };
+      
+      // Pequeno delay para garantir que o DOM foi atualizado
+      const timeoutId = setTimeout(scrollToBottom, 100);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [messages, isTyping]);
+
+  // Scroll suave ao focar no input
+  const handleInputFocus = () => {
+    setTimeout(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'end'
+        });
+      }
+    }, 300);
   };
 
   const handleLocationDetected = (location: { 
@@ -32,8 +70,13 @@ export default function LisAssistant({ onComplete }: LisAssistantProps) {
     city?: string; 
     country?: string; 
     weatherData?: {
-      temperature?: number;
-      conditions?: string;
+      temperature: number;
+      description: string;
+      humidity: number;
+      windSpeed: number;
+      feelsLike: number;
+      condition: string;
+      city: string;
     }; 
   }) => {
     const updatedProfile = {
@@ -46,18 +89,18 @@ export default function LisAssistant({ onComplete }: LisAssistantProps) {
       cidade: updatedProfile.cidade,
       weatherData: updatedProfile.weatherData ? {
         temperature: updatedProfile.weatherData.temperature || 0,
-        description: '',
-        condition: updatedProfile.weatherData.conditions || '',
-        humidity: 0,
-        windSpeed: 0,
-        feelsLike: 0
+        description: updatedProfile.weatherData.description || '',
+        condition: updatedProfile.weatherData.condition || '',
+        humidity: updatedProfile.weatherData.humidity || 0,
+        windSpeed: updatedProfile.weatherData.windSpeed || 0,
+        feelsLike: updatedProfile.weatherData.feelsLike || 0
       } : undefined
     }));
 
     // Mensagem inicial personalizada com clima
-    if (location.weatherData && typeof location.weatherData.temperature === 'number' && location.weatherData.conditions) {
+    if (location.weatherData && typeof location.weatherData.temperature === 'number' && location.weatherData.description) {
       addMessage(
-        `Olá! Eu sou a Lis, sua assistente de moda pessoal! 👗✨\nAqui está a previsão de hoje na sua região: 🌡️ ${location.weatherData.temperature}°C, ${location.weatherData.conditions} \nMe conte: para onde você vai hoje?`,
+        `Olá! Eu sou a Lis, sua assistente de moda pessoal! 👗✨\nAqui está a previsão de hoje na sua região: 🌡️ ${location.weatherData.temperature}°C, ${location.weatherData.description} \nMe conte: para onde você vai hoje?`,
         false
       );
     } else {
@@ -138,22 +181,31 @@ export default function LisAssistant({ onComplete }: LisAssistantProps) {
           setUserProfile(finalProfile);
         }
         let delay = 0;
+const hasLookSuggestion = false;
+const hasInspirations = false;
+        
         data.messages.forEach((msg: string, idx: number) => {
           setTimeout(() => {
             addMessage(msg, false);
+            
             // Detecta sugestão completa
-            const hasCompleteSuggestions = msg.includes('Look Principal') || 
+            const isLookSuggestion = msg.includes('Look Principal') || 
               msg.includes('LOOK PRINCIPAL') ||
               msg.includes('**Look Principal**');
-            if (hasCompleteSuggestions) {
-              setTimeout(() => {
-                onComplete(finalProfile);
-              }, 1500);
-            } else if (idx === data.messages.length - 1) {
-              setTimeout(() => setWaitingForInput(true), 500);
+            
+            // Só chama onComplete quando terminar todas as mensagens E tiver sugestão de look
+            if (idx === data.messages.length - 1) {
+              if (isLookSuggestion) {
+                // Aguarda mais tempo para o usuário ler todas as mensagens
+                setTimeout(() => {
+                  onComplete(finalProfile);
+                }, 3000); // Aguarda 3 segundos após a última mensagem
+              } else {
+                setTimeout(() => setWaitingForInput(true), 800);
+              }
             }
           }, delay);
-          delay += 800;
+          delay += 1200; // Tempo entre mensagens
         });
       } else if (data.message) {
         addMessage(data.message, false);
@@ -175,18 +227,15 @@ export default function LisAssistant({ onComplete }: LisAssistantProps) {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-6 text-white">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          👗 Assistente Lis
-        </h2>
-        <p className="text-purple-100 mt-1">Vamos descobrir seu look perfeito!</p>
+    <div className="flex flex-col h-full relative">
+      {/* Welcome Message */}
+      <div className="p-6 text-center bg-gradient-to-br from-purple-50 to-pink-50 flex-shrink-0">
+        <p className="text-purple-600 font-medium">Vamos descobrir seu look perfeito!</p>
       </div>
 
       {/* Location Detector */}
       {showLocationDetector && (
-        <div className="p-6 bg-gray-50 border-b border-gray-200">
+        <div className="p-6 bg-gray-50 border-b border-gray-200 flex-shrink-0">
           <div className="mb-4">
             <h3 className="text-lg font-semibold text-gray-800 mb-2">🌍 Detecção de Localização</h3>
             <p className="text-sm text-gray-600 mb-4">
@@ -211,8 +260,17 @@ export default function LisAssistant({ onComplete }: LisAssistantProps) {
       )}
 
       {/* Chat Messages */}
-      <div className={`${showLocationDetector ? 'h-64' : 'h-96'} overflow-y-auto p-8 space-y-6 bg-gradient-to-b from-gray-50 to-white`}>
+      <div 
+        ref={messagesContainerRef}
+        className="flex-1 overflow-y-auto p-8 space-y-6 bg-gradient-to-b from-gray-50 to-white scroll-smooth custom-scrollbar"
+        style={{ 
+          paddingBottom: waitingForInput ? '140px' : '20px'
+        }}
+      >
         {messages.map((message, index) => {
+          // Detecta se a mensagem contém URLs de imagem
+          const hasImages = message.text.includes('🖼️ Inspiração') && message.text.includes('http');
+          
           return (
             <div key={message.id} className="animate-slide-in" style={{ animationDelay: `${index * 0.1}s` }}>
               <div
@@ -226,6 +284,31 @@ export default function LisAssistant({ onComplete }: LisAssistantProps) {
                   }`}
                 >
                   <p className="whitespace-pre-line leading-relaxed">{message.text}</p>
+                  
+                  {/* Renderizar imagens se existirem */}
+                  {hasImages && !message.isUser && (
+                    <div className="mt-4 grid grid-cols-1 gap-2">
+                      {message.text.split('\n').filter(line => line.includes('🖼️ Inspiração')).map((imageLine, imgIndex) => {
+                        const urlMatch = imageLine.match(/https?:\/\/[^\s]+/);
+                        if (urlMatch) {
+                          return (
+                            <div key={imgIndex} className="relative">
+                              <img 
+                                src={urlMatch[0]} 
+                                alt={`Inspiração ${imgIndex + 1}`}
+                                className="w-full h-32 object-cover rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.src = '/placeholder-outfit.jpg';
+                                }}
+                              />
+                            </div>
+                          );
+                        }
+                        return null;
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -245,17 +328,21 @@ export default function LisAssistant({ onComplete }: LisAssistantProps) {
             </div>
           </div>
         )}
+        
+        {/* Elemento invisível para scroll automático */}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input Area */}
       {waitingForInput && (
-        <div className="p-6 bg-gradient-to-br from-gray-50 to-blue-50 border-t border-gray-200 animate-fade-in">
+        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-br from-gray-50 to-blue-50 border-t border-gray-200 animate-fade-in backdrop-blur-sm bg-opacity-95 z-50">
           <div className="flex gap-3 items-end">
             <div className="flex-1">
               <textarea
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
+                onFocus={handleInputFocus}
                 placeholder="Digite sua resposta aqui..."
                 className="w-full p-4 rounded-2xl border-2 border-gray-200 focus:border-purple-300 focus:outline-none resize-none transition-all duration-300 bg-white shadow-soft"
                 rows={2}
@@ -277,5 +364,4 @@ export default function LisAssistant({ onComplete }: LisAssistantProps) {
       )}
     </div>
   );
-}
 }

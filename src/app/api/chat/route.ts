@@ -167,7 +167,7 @@ ${historyContext}
       .map(msg => msg.trim())
       .filter(Boolean)
       .map(msg => (msg.length > 180 ? msg.slice(0, 180) + '...' : msg));
-    return bubbles;
+    return bubbles.join('\n\n');
     
   } catch (error: Error | unknown) {
     console.error('Erro na IA:', error);
@@ -202,8 +202,13 @@ export async function POST(request: NextRequest) {
     // Chama a IA para gerar a resposta
     const aiResponse = await callGeminiForChat(message, updatedProfile, conversationHistory);
     
+    const finalMessages = Array.isArray(aiResponse) ? aiResponse : [aiResponse];
+    
+    // As inspirações agora são geradas naturalmente pela IA durante a conversa
+    // Não há mais verificação de perfil completo
+    
     return NextResponse.json({
-      messages: Array.isArray(aiResponse) ? aiResponse : [aiResponse],
+      messages: finalMessages,
       userProfile: updatedProfile
     });
     
